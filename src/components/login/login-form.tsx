@@ -61,7 +61,7 @@ export default function Login() {
             <Package className="h-12 w-12 text-primary-foreground" />
           </div>
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Welcome to ProductHub
+            Welcome to Product Management
           </CardTitle>
           <CardDescription className="text-base">
             Enter your email to access the product management dashboard
