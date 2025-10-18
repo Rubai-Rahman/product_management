@@ -1,143 +1,269 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Product } from '@/lib/_types/products';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '../ui/badge';
+import {
+  ArrowLeft,
+  Edit2,
+  Trash2,
+  Calendar,
+  Package,
+  DollarSign,
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useDeleteProductMutation } from '@/lib/store/api';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 
-export default function ProductDetailsPage({ product }: { product: Product }) {
-  const [selectedImage, setSelectedImage] = useState(product.images[0]);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+interface ProductDetailsPageProps {
+  product: Product;
+}
+
+export default function ProductDetailsPage({
+  product,
+}: ProductDetailsPageProps) {
   const router = useRouter();
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
 
-  const handleEdit = () => {
-    // Navigate to edit page
-    router.push(`/products/${product.slug}/edit`);
-  };
-
-  const handleDelete = () => {
-    // Simulate delete request here
-    console.log('Product deleted:', product.id);
-    setConfirmDelete(false);
-    router.push('/products'); // Redirect after delete
+  const handleDelete = async () => {
+    try {
+      await deleteProduct(product.id).unwrap();
+      toast.success('Product deleted successfully!');
+      router.push('/products');
+    } catch (error) {
+      toast.error('Failed to delete product');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12">
-      <div className="max-w-5xl w-full bg-white rounded-3xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-        {/* LEFT: Images */}
-        <div className="flex flex-col items-center justify-center bg-gray-50 p-6">
-          <div className="relative w-full aspect-square">
-            <Image
-              src={selectedImage}
-              alt={product.name}
-              fill
-              className="object-contain rounded-2xl"
-              unoptimized
-            />
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      {/* Header */}
+      <div className="bg-card border-b border-border sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-4">
+              <Link href="/products">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Products
+                </Button>
+              </Link>
+              <div className="h-6 w-px bg-border" />
+              <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Product Details
+              </h1>
+            </div>
 
-          <div className="flex gap-3 mt-4">
-            {product.images.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedImage(img)}
-                className={`relative w-20 h-20 rounded-xl border-2 overflow-hidden transition-all duration-200 ${
-                  selectedImage === img
-                    ? 'border-gray-900 scale-105'
-                    : 'border-gray-200 hover:border-gray-400'
-                }`}
-              >
-                <Image
-                  src={img}
-                  alt={`${product.name}-${idx}`}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              </button>
-            ))}
-          </div>
-        </div>
+            <div className="flex items-center gap-2">
+              <Link href={`/products/edit/${product.id}`}>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Edit2 className="w-4 h-4" />
+                  Edit
+                </Button>
+              </Link>
 
-        {/* RIGHT: Details */}
-        <div className="p-8 flex flex-col justify-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {product.name}
-          </h1>
-          <p className="text-sm text-gray-500 mb-4">
-            Category:{' '}
-            <span className="font-medium text-gray-700">
-              {product.category.name}
-            </span>
-          </p>
-
-          <p className="text-gray-700 leading-relaxed mb-6">
-            {product.description}
-          </p>
-
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-3xl font-bold text-gray-900">
-              ৳{product.price}
-            </span>
-          </div>
-
-          <div className="space-y-2 text-sm text-gray-500 mb-8">
-            <p>
-              <span className="font-semibold text-gray-700">Created:</span>{' '}
-              {new Date(product.createdAt).toLocaleString()}
-            </p>
-            <p>
-              <span className="font-semibold text-gray-700">Updated:</span>{' '}
-              {new Date(product.updatedAt).toLocaleString()}
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <button
-              onClick={handleEdit}
-              className="flex-1 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => setConfirmDelete(true)}
-              className="flex-1 bg-red-600 text-white py-3 rounded-xl font-semibold hover:bg-red-700 transition"
-            >
-              Delete
-            </button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete "{product.name}"? This
+                      action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? 'Deleting...' : 'Delete'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* DELETE CONFIRMATION MODAL */}
-      {confirmDelete && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-80 text-center">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">
-              Delete Product
-            </h2>
-            <p className="text-sm text-gray-600 mb-6">
-              Are you sure you want to delete <b>{product.name}</b>?
-            </p>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => setConfirmDelete(false)}
-                className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
-              >
-                Confirm
-              </button>
-            </div>
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Product Images */}
+          <div className="lg:col-span-2">
+            <Card className="shadow-lg border-0 bg-gradient-to-br from-card to-muted/20">
+              <CardContent className="p-6">
+                <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
+                  {product.images && product.images.length > 0 ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      width={600}
+                      height={600}
+                      unoptimized
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <Package className="w-24 h-24 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">
+                        No image available
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Additional Images */}
+                {product.images && product.images.length > 1 && (
+                  <div className="grid grid-cols-4 gap-4 mt-4">
+                    {product.images.slice(1, 5).map((image, index) => (
+                      <div
+                        key={index}
+                        className="aspect-square rounded-lg overflow-hidden bg-muted"
+                      >
+                        <Image
+                          src={image}
+                          alt={`${product.name} ${index + 2}`}
+                          width={150}
+                          height={150}
+                          unoptimized
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Product Info */}
+          <div className="space-y-6">
+            {/* Basic Info */}
+            <Card className="shadow-lg border-0 bg-gradient-to-br from-card to-muted/20">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  {product.name}
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20">
+                    {product.category?.name || 'Uncategorized'}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-accent" />
+                  <span className="text-3xl font-bold text-accent">
+                    ${product.price?.toFixed(2) || '0.00'}
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-foreground">Description</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Metadata */}
+            <Card className="shadow-lg border-0 bg-gradient-to-br from-card to-muted/20">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">
+                  Product Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      Created
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(product.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      Last Updated
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(product.updatedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Package className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      Product ID
+                    </p>
+                    <p className="text-sm text-muted-foreground font-mono">
+                      {product.id}
+                    </p>
+                  </div>
+                </div>
+
+                {product.slug && (
+                  <div className="flex items-center gap-3">
+                    <Package className="w-5 h-5 text-muted-foreground" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        Slug
+                      </p>
+                      <p className="text-sm text-muted-foreground font-mono">
+                        {product.slug}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

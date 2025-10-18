@@ -1,3 +1,7 @@
+import CreateProduct from './page-create';
+
 const CreateProductPage = () => {
-  return <CreateProduct/>
-}
+  return <CreateProduct />;
+};
+
+export default CreateProductPage;
