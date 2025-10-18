@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import LoginForm from '@/src/components/login/login-form';
-import { useLoginMutation } from '@/src/lib/store/api';
-import { setCredentials } from '@/src/lib/features/authSlice';
+import LoginForm from '@/components/login/login-form';
+import { useLoginMutation } from '@/lib/store/api';
+import { setCredentials } from '@/lib/features/authSlice';
 
 const LogInPageContent = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);

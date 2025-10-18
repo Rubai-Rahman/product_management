@@ -6,10 +6,17 @@ interface AuthState {
   email: string | null;
 }
 
-const initialState: AuthState = {
-  token: null,
-  email: null,
+const getStoredAuth = () => {
+  const authData = localStorage.getItem('auth');
+  if (!authData) return { token: null, email: null };
+  try {
+    return JSON.parse(authData);
+  } catch (e) {
+    return { token: null, email: null };
+  }
 };
+
+const initialState: AuthState = getStoredAuth();
 
 const authSlice = createSlice({
   name: 'auth',
@@ -21,10 +28,18 @@ const authSlice = createSlice({
     ) => {
       state.token = action.payload.token;
       state.email = action.payload.email;
+      localStorage.setItem(
+        'auth',
+        JSON.stringify({
+          token: action.payload.token,
+          email: action.payload.email,
+        })
+      );
     },
     logout: (state) => {
       state.token = null;
       state.email = null;
+      localStorage.removeItem('auth');
     },
   },
 });

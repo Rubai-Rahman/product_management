@@ -1,9 +1,19 @@
+'use client';
+
+import ProductTable from '@/components/products/products-table';
+import { useGetProductsQuery } from '@/lib/store/api';
+
 const ProductsPageContent = () => {
+  const { data, isLoading, error } = useGetProductsQuery({
+    offset: 100,
+    limit: 10,
+  });
+  console.log('data', data, '......');
   return (
     <div>
-      <h1>Products page content</h1>
+      <ProductTable products={data || []} onDelete={() => {}} />
     </div>
-  )
-}
+  );
+};
 
-export default ProductsPageContent
+export default ProductsPageContent;
