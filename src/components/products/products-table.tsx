@@ -109,16 +109,10 @@ export default function ProductTable({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p
-                      className="font-semibold text-foreground truncate text-sm sm:text-base max-w-[12rem] 
-                truncate sm:line-clamp-2"
-                    >
+                    <p className="font-semibold text-foreground text-sm sm:text-base max-w-[12rem] truncate sm:line-clamp-2">
                       {product.name}
                     </p>
-                    <p
-                      className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-[12rem] 
-                truncate sm:line-clamp-2"
-                    >
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-[12rem] truncate sm:line-clamp-2">
                       {product.description}
                     </p>
                     {/* Show category and date on mobile */}
