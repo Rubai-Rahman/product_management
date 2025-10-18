@@ -1,9 +1,6 @@
-import LoginForm from '@/src/components/login/login-form';
+import { redirect } from 'next/navigation';
 
+// This page will never be rendered as we redirect immediately
 export default function Home() {
-  return (
-    <div>
-      <LoginForm />
-    </div>
-  );
+  redirect('/login');
 }

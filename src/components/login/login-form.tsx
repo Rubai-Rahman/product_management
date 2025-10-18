@@ -12,39 +12,18 @@ import {
   CardTitle,
 } from '@/src/components/ui/card';
 
-export default function Login() {
+export default function LoginForm({
+  onSubmit,
+  isLoading,
+}: {
+  onSubmit: (data: { email: string }) => void;
+  isLoading: boolean;
+}) {
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    //   if (!email || !email.includes('@')) {
-    //     toast({
-    //       title: 'Invalid Email',
-    //       description: 'Please enter a valid email address',
-    //       variant: 'destructive',
-    //     });
-    //     return;
-    //   }
-
-    //   setIsLoading(true);
-    //   try {
-    //     const data = await login(email);
-    //     dispatch(setCredentials({ token: data.token, email }));
-    //     toast({
-    //       title: 'Welcome! 🎉',
-    //       description: 'Successfully logged in',
-    //     });
-    //   } catch (error: any) {
-    //     toast({
-    //       title: 'Login Failed',
-    //       description: error.response?.data?.message || 'Please try again',
-    //       variant: 'destructive',
-    //     });
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
+    onSubmit({ email });
   };
 
   return (

@@ -16,9 +16,16 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Product'], 
+  tagTypes: ['Product'],
   endpoints: (builder) => ({
-    
+    login: builder.mutation<{ token: string }, { email: string }>({
+      query: (credentials) => ({
+        url: '/auth',
+        method: 'POST',
+        body: credentials,
+      }),
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }],
+    }),
     getProducts: builder.query<Product[], { page: number; search?: string }>({
       query: ({ page, search }) =>
         `/products?page=${page}${search ? `&search=${search}` : ''}`,
@@ -67,6 +74,7 @@ export const api = createApi({
 });
 
 export const {
+  useLoginMutation,
   useGetProductsQuery,
   useGetProductByIdQuery,
   useCreateProductMutation,
