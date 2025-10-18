@@ -1,0 +1,3 @@
+const CreateProductPage = () => {
+  return <CreateProduct/>
+}
