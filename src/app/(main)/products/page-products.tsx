@@ -58,7 +58,7 @@ const ProductsPageContent = () => {
       toast.success('Product deleted successfully!');
       // No need to manually refetch - RTK Query will auto-invalidate
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error('Failed to delete product');
     }
   };
@@ -114,7 +114,9 @@ const ProductsPageContent = () => {
               />
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              {searchQuery && <span>Showing results for "{searchQuery}"</span>}
+              {searchQuery && (
+                <span>Showing results for &quot;{searchQuery}&quot;</span>
+              )}
               {!searchQuery && (
                 <span>
                   Page {currentPage} • {displayProducts.length} products
@@ -175,7 +177,7 @@ const ProductsPageContent = () => {
               <div className="mt-8">
                 <ResultNotFound
                   message="No Products Found"
-                  description={`No products match "${searchQuery}". Try a different search term.`}
+                  description={`No products match &quot;${searchQuery}&quot;. Try a different search term.`}
                   icon="search"
                 />
               </div>

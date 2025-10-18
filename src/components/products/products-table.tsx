@@ -109,8 +109,10 @@ export default function ProductTable({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-foreground truncate text-sm sm:text-base max-w-[12rem] 
-                truncate sm:line-clamp-2">
+                    <p
+                      className="font-semibold text-foreground truncate text-sm sm:text-base max-w-[12rem] 
+                truncate sm:line-clamp-2"
+                    >
                       {product.name}
                     </p>
                     <p
@@ -197,8 +199,8 @@ export default function ProductTable({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Delete Product</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to delete "{product.name}"? This
-                          action cannot be undone.
+                          Are you sure you want to delete &quot;{product.name}
+                          &quot;? This action cannot be undone.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

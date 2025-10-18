@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Product, category } from '@/lib/_types/products';
 import { productSchema, ProductFormData } from '@/lib/schemas/product';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 interface ProductFormProps {
   mode: 'create' | 'edit';
@@ -33,7 +34,6 @@ export default function ProductForm({
     handleSubmit,
     formState: { errors },
     setValue,
-    control,
     watch,
   } = useForm({
     resolver: zodResolver(productSchema),
@@ -315,9 +315,12 @@ export default function ProductForm({
                           key={index}
                           className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-muted to-muted/50"
                         >
-                          <img
+                          <Image
+                            height={200}
+                            width={200}
                             src={imageUrl}
                             alt={`Preview ${index + 1}`}
+                            unoptimized
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;

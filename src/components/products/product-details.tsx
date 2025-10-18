@@ -44,7 +44,7 @@ export default function ProductDetailsPage({
       await deleteProduct(product.id).unwrap();
       toast.success('Product deleted successfully!');
       router.push('/products');
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete product');
     }
   };
@@ -91,8 +91,8 @@ export default function ProductDetailsPage({
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete Product</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to delete "{product.name}"? This
-                      action cannot be undone.
+                      Are you sure you want to delete &quot;{product.name}
+                      &quot;? This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

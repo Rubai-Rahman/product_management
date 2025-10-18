@@ -15,15 +15,30 @@ import ErrorState from '@/components/ui/error-state';
 import { toast } from 'sonner';
 
 const EditProduct = ({ id }: { id: string }) => {
+  console.log('EditProduct received ID:', id);
+  console.log('ID type:', typeof id);
+  console.log('ID length:', id?.length);
+
   const router = useRouter();
   const {
     data: product,
     isLoading: productLoading,
     error,
     isError,
+    isSuccess,
   } = useGetProductByIdQuery(id, {
     skip: !id || id.length === 0, // Skip the query if no valid ID
   });
+
+  console.log('Query state:', {
+    product,
+    productLoading,
+    error,
+    isError,
+    isSuccess,
+    hasId: !!id,
+  });
+  console.log('Error details:', error);
 
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const { data: categories = [], isLoading: categoriesLoading } =

@@ -9,10 +9,11 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.bitechx.com',
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token;   
+      const token = (getState() as RootState).auth.token;
+
       // Set content type
       headers.set('Content-Type', 'application/json');
-      
+
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -31,7 +32,7 @@ export const api = createApi({
     }),
     getProducts: builder.query<Product[], { offset: number; limit: number }>({
       query: ({ offset, limit }) => `/products?offset=${offset}&limit=${limit}`,
-      providesTags: (result = [], error, args) => [
+      providesTags: (result = []) => [
         ...result.map(({ id }) => ({ type: 'Product' as const, id })),
         { type: 'Product', id: 'LIST' },
       ],
@@ -89,7 +90,7 @@ export const api = createApi({
     >({
       query: ({ offset = 0, limit = 10 }) =>
         `/categories?offset=${offset}&limit=${limit}`,
-      providesTags: (result = [], error, args) => [
+      providesTags: (result = []) => [
         ...result.map(({ id }) => ({ type: 'Category' as const, id })),
         { type: 'Category', id: 'LIST' },
       ],

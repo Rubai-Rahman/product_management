@@ -37,14 +37,14 @@ const Searchbar = ({
           placeholder={placeholder}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-10 bg-background border-input focus:border-blue-500 focus:ring-blue-200 transition-all duration-200"
+          className="pl-10 pr-10 bg-background border-input focus:border-primary focus:ring-primary/20 transition-all duration-200"
         />
         {searchQuery && (
           <Button
             variant="ghost"
             size="sm"
             onClick={handleClear}
-            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-muted/50"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -52,7 +52,7 @@ const Searchbar = ({
       </div>
       {searchQuery && (
         <div className="absolute top-full left-0 right-0 mt-1 text-xs text-muted-foreground">
-          Searching for "{searchQuery}"...
+          Searching for &quot;{searchQuery}&quot;...
         </div>
       )}
     </div>
